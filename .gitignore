@@ -1,0 +1,13 @@
+.config
+.ipynb_checkpoints
+.ipynb_aml_checkpoints
+.vscode
+.amlignore
+__pycache__
+P9_01_notebooks/data/*
+!P9_01_notebooks/data/img/
+outputs
+*.ipynb
+!*_no_out.ipynb
+*.amltmp
+*.env

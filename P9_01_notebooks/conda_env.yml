@@ -1,0 +1,26 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7.9
+  - pip
+  - notebook
+  - pip:
+    - azureml-defaults
+    - azureml-widgets
+    - azureml-train-core
+    - azureml-pipeline
+    - numpy
+    - pandas
+    - scipy
+    - matplotlib
+    - seaborn
+    - python-dotenv
+    - joblib
+    - tqdm
+    - scikit-learn
+    - scikit-surprise
+    - pyodbc
+    - SQLAlchemy
+    - jupyter_contrib_nbextensions
+    - python-dotenv
