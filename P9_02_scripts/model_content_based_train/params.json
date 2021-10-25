@@ -1,0 +1,1 @@
+{"train_user_article_ratings": "train_user_article_ratings", "valid_user_article_ratings": "valid_user_article_ratings", "article_profiles": "article_profiles", "train_user_profiles": "train_user_profiles", "rating_col": "rating_click_nb", "num_vars_scale": 0.0, "cat_vars_scale": 1.0}
