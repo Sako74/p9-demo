@@ -37,7 +37,7 @@ CSV_PATH = "data/csv/"
 PICKLE_PATH = "data/pickle/"
 PARQUET_PATH = "data/parquet/"
 MODEL_PATH = "data/model/"
-SCRIPTS_PATH = "scripts/"
+SCRIPTS_PATH = "../P9_02_scripts/"
 
 os.makedirs(CSV_PATH, exist_ok=True)
 os.makedirs(PICKLE_PATH, exist_ok=True)
