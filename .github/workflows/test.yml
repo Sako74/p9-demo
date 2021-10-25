@@ -23,11 +23,7 @@ jobs:
       shell: bash
       run: |
         $CONDA/bin/conda env update --file P9_02_scripts/model_baseline_train/conda_env.yml --name base
-    - name: 'Display python verson'
+    - name: 'Train model'
       shell: bash
       run: |
-        $CONDA/bin/python
-        import os
-        os.getenv("tenantId")
-        os.getenv("workspaceName")
-        quit()
+        $CONDA/bin/python -m P9_02_scripts.model_baseline_train.run
