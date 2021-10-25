@@ -1,6 +1,30 @@
 # -*- coding: utf-8 -*-
+from azureml.core import Workspace
+
 from azureml.core.compute import AmlCompute, ComputeTarget
 from azureml.exceptions import ComputeTargetException
+
+from azureml.core.authentication import ServicePrincipalAuthentication
+
+
+def get_ws(azure_credentials, azure_workspace):
+    """"""
+    # On crée un service d'authentification
+    svc_pr = ServicePrincipalAuthentication(
+        tenant_id=azure_credentials.get("tenantId"),
+        service_principal_id=azure_credentials.get("clientId"),
+        service_principal_password=azure_credentials.get("clientSecret")
+    )
+
+    # On se connecte au workspace
+    ws = Workspace(
+        subscription_id=azure_credentials.get("subscriptionId"),
+        resource_group=azure_workspace.get("resourceGroup"),
+        workspace_name=azure_workspace.get("workspaceName"),
+        auth=svc_pr
+    )
+
+    return ws
 
 
 def get_compute_target(ws, name, location, priority, vm_size, max_nodes=1):

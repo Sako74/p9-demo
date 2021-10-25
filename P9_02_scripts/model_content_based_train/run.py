@@ -56,6 +56,7 @@ def exp_submit(
     train_user_article_ratings_ds = Dataset.get_by_name(ws, params.get("train_user_article_ratings"))
     valid_user_article_ratings_ds = Dataset.get_by_name(ws, params.get("valid_user_article_ratings"))
     article_profiles_ds = Dataset.get_by_name(ws, params.get("article_profiles"))
+    train_user_profiles_ds = Dataset.get_by_name(ws, params.get("train_user_profiles"))
     
     # On définit les paramètres de l'expérience
     args = [
@@ -63,6 +64,7 @@ def exp_submit(
         "--train_user_article_ratings_id", train_user_article_ratings_ds.as_named_input("train_user_article_ratings_ds"),
         "--valid_user_article_ratings_id", valid_user_article_ratings_ds.as_named_input("valid_user_article_ratings_ds"),
         "--article_profiles_id", article_profiles_ds.as_named_input("article_profiles_ds"),
+        "--train_user_profiles_id", train_user_profiles_ds.as_named_input("train_user_profiles_ds"),
 
         # Hyperparamètres
         "--rating_col", params.get("rating_col"),
@@ -113,7 +115,7 @@ if __name__ == "__main__":
     # On soummet l'exécution de l'expérience
     exp_submit(
         ws,
-        "P9_02_scripts/model_baseline_train",
+        "P9_02_scripts/model_content_based_train",
         params=None,
         gs_params=None,
         wait_for_completion=True,
