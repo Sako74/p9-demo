@@ -68,6 +68,8 @@ def exp_submit(
 
         # Hyperparamètres
         "--rating_col", params.get("rating_col"),
+        "--num_vars_scale", params.get("num_vars_scale"),
+        "--cat_vars_scale", params.get("cat_vars_scale"),
     ]
     
     # On crée la configuration d'exécution du script d'entrainement

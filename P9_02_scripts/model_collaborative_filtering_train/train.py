@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
 import time
+import argparse
 
 from azureml.core import Run, Dataset
 
-from training import *
+from models import *
 
 # On crée le dossier de sortie s'il n'existe pas
 OUTPUT_PATH = "outputs/"
