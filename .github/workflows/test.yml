@@ -1,0 +1,30 @@
+name: Test workflow
+
+on:
+  workflow_dispatch:
+
+env:
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  AZURE_WORKSPACE: ${{ secrets.AZURE_WORKSPACE }}
+  PYTHON_VERSION: '3.8'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        $CONDA/bin/conda env update --file P9_02_scripts/model_baseline_train/conda_env.yml --name base
+    - name: 'Display python verson'
+      shell: bash
+      run: |
+        python --version
+        $CONDA/bin/python --version
