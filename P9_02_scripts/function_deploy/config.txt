@@ -1,0 +1,5 @@
+[DEFAULT]
+ressourceGroup="p9-function-rg"
+storageName="p9functionstorage"
+functionAppName="p9-recommender-function"
+region="northeurope"

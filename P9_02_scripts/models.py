@@ -7,12 +7,14 @@ import pandas as pd
 
 import joblib
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 from sklearn.preprocessing import RobustScaler, OneHotEncoder
 from sklearn.metrics.pairwise import cosine_similarity
 
 import surprise
+
+PRIMARY_METRIC_NAME = "recall@5"
 
 
 def get_precision_recall_n_score(model, model_name, user_article_ratings, article_profiles, top_n=5):
@@ -105,6 +107,10 @@ class Recommender(ABC):
     def __init__(self, article_profiles, user_article_ratings):
         self.article_profiles = article_profiles
         self.user_article_ratings = user_article_ratings
+        
+    @abstractmethod
+    def fit(self):
+        pass
     
     @abstractmethod
     def recommand_from_no_click_article_ids(self, user_id, no_click_article_ids, top_n=None, return_ratings=False):
@@ -131,6 +137,9 @@ class MostRecentRecommender(Recommender):
     
     def __init__(self, article_profiles, user_article_ratings):
         super().__init__(article_profiles, user_article_ratings)
+        
+    def fit(self):
+        pass
     
     def recommand_from_no_click_article_ids(self, user_id, no_click_article_ids, top_n=None, return_ratings=False): 
         # On récupère les profiles des articles
@@ -248,10 +257,10 @@ class ContentBasedRecommender(Recommender):
 class CollaborativeRecommender(Recommender):
     """"""
     
-    def __init__(self, article_profiles, user_article_ratings):
+    def __init__(self, article_profiles, user_article_ratings, **kwargs):
         super().__init__(article_profiles, user_article_ratings)
         
-        self.algo = surprise.SVD()
+        self.algo = surprise.SVD(**kwargs)
         
         self.cold_start_model = MostRecentRecommender(article_profiles, user_article_ratings)
         

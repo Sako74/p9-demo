@@ -1,15 +1,31 @@
 # -*- coding: utf-8 -*-
 import os
 import gc
+import json
 import requests
 from shutil import copy2
+from configparser import ConfigParser
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from azureml.core import Workspace, Dataset, Datastore, Environment, Model
+from azureml.core import (
+    Workspace, Dataset, Datastore, Environment,
+    Model, Run, Experiment, ScriptRunConfig
+)
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
+from azureml.core.compute import AmlCompute, ComputeTarget
+
+from azureml.exceptions import ComputeTargetException
+
+from azureml.train.hyperdrive import HyperDriveConfig, GridParameterSampling, BanditPolicy
+from azureml.train.hyperdrive.run import PrimaryMetricGoal
+from azureml.train.hyperdrive.parameter_expressions import choice, uniform
+
+from azureml.widgets import RunDetails
+
+from tqdm.notebook import tqdm
 
 from IPython.display import display
 
@@ -29,6 +45,37 @@ os.makedirs(PARQUET_PATH, exist_ok=True)
 os.makedirs(MODEL_PATH, exist_ok=True)
 
 RANDOM_SEED = 42
+MAX_TOTAL_RUNS = 50
+
+
+def get_compute_target(ws, name, location, priority, vm_size, max_nodes=1):
+    """"""
+    try:
+        # On charge le cluster de calcul si il existe
+        compute_target = ComputeTarget(workspace=ws, name=name)
+    except ComputeTargetException:
+        # Si le cluster n'existe pas, on on en crée un nouveau
+        config = AmlCompute.provisioning_configuration(
+            vm_size="STANDARD_NC6",
+            location=location,
+            vm_priority="lowpriority",
+            min_nodes=0,
+            max_nodes=1
+        )
+
+        compute_target = ComputeTarget.create(
+            workspace=ws,
+            name=name,
+            provisioning_configuration=config
+        )
+        
+        compute_target.wait_for_completion(
+            show_output=True,
+            min_node_count=None,
+            timeout_in_minutes=20
+        )
+        
+    return compute_target
 
 
 def clear_datastore(datastore):
@@ -95,3 +142,13 @@ def get_articles_dataset(ws, start_time=None, end_time=None, include_boundary=Tr
         articles_ds = articles_ds.time_before(end_time, include_boundary=include_boundary)
     
     return articles_ds
+
+
+def get_last_run(ws, exp_name):
+    """Renvoie la dernière exécution de l'expérience spécifiée"""
+    # On récupère l'exécution de la dernière expérience.
+    # Ce code a été ajouté en cas de coupure de connexion avec le notebook...
+    exp = Experiment(workspace=ws, name=exp_name)
+    
+    # On renvoie la dernière exécution
+    return next(exp.get_runs())

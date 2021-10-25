@@ -13,6 +13,8 @@ from tqdm.notebook import tqdm
 
 from sklearn.metrics.pairwise import cosine_similarity
 
+DEFAULT_RATING_COL = "rating_click_nb"
+
 
 def get_clicks(clicks_dir):
     """Renvoie un DataFrame contenant les articles cliqués par les utilisateurs."""
