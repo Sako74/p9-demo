@@ -26,5 +26,8 @@ jobs:
     - name: 'Display python verson'
       shell: bash
       run: |
-        python --version
-        $CONDA/bin/python --version
+        $CONDA/bin/python
+        import os
+        os.getenv("tenantId")
+        os.getenv("workspaceName")
+        quit()
