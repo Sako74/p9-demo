@@ -22,7 +22,7 @@ jobs:
     - name: 'Resolve Project Dependencies Using Pip'
       shell: bash
       run: |
-        $CONDA/bin/conda env update --file P9_02_scripts/model_baseline_train/conda_env.yml --name base
+        $CONDA/bin/conda env update --file P9_01_notebooks/conda_env.yml --name base
     - name: 'Train model'
       shell: bash
       run: |
