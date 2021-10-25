@@ -13,25 +13,25 @@ from azureml.core.authentication import ServicePrincipalAuthentication
 from ..utils import *
 
 
-# +
-def get_ws():
+def get_ws(azure_credentials, azure_workspace):
     """"""
     # On crée un service d'authentification
     svc_pr = ServicePrincipalAuthentication(
-        tenant_id=TENANT_ID,
-        service_principal_id=SERVICE_PRINCIPAL_ID,
-        service_principal_password=SERVICE_PRINCIPAL_PASSWORD
+        tenant_id=azure_credentials.get("tenantId"),
+        service_principal_id=azure_credentials.get("clientId"),
+        service_principal_password=azure_credentials.get("clientSecret")
     )
 
     # On se connecte au workspace
     ws = Workspace(
-        subscription_id=SUBSCRIPTION_ID,
-        resource_group=RESOURCE_GROUP,
-        workspace_name=WORKSPACE_NAME,
+        subscription_id=azure_credentials.get("subscriptionId"),
+        resource_group=azure_workspace.get("resourceGroup"),
+        workspace_name=azure_workspace.get("workspaceName"),
         auth=svc_pr
     )
 
     return ws
+
 
 def exp_submit(
         ws,
@@ -123,20 +123,13 @@ def exp_submit(
     return run
 
 
-# -
-
 if __name__ == "__main__":
     # On charge les variables d'environnemnt
-    TENANT_ID = os.getenv("tenantId")
-    SERVICE_PRINCIPAL_ID = os.getenv("clientId")
-    SERVICE_PRINCIPAL_PASSWORD = os.getenv("clientSecret")
-
-    SUBSCRIPTION_ID = os.getenv("subscriptionId")
-    RESOURCE_GROUP = os.getenv("resourceGroup")
-    WORKSPACE_NAME = os.getenv("workspaceName")
+    azure_credentials = json.loads(os.getenv("AZURE_CREDENTIALS"))
+    azure_workspace = json.loads(os.getenv("AZURE_WORKSPACE"))
     
     # On charge l’espace de travail Azure Machine Learning existant
-    ws = get_ws()
+    ws = get_ws(azure_credentials, azure_workspace)
     
     # On soummet l'exécution de l'expérience
     exp_submit(
