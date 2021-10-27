@@ -25,6 +25,7 @@ jobs:
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         python -m pip install --upgrade pip
         pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        echo MODEL_ACI_URL="http://90b45527-29a5-4207-a971-66ff7f62daef.northeurope.azurecontainer.io/score" > recommender/.env
         popd
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
