@@ -15,13 +15,15 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
       
-    - name: 'Download artifacts'
-      uses: actions/download-artifact@v2
+    - name: 'Azure Login'
+      uses: azure/login@v1
       with:
-        name: scoring_uri
-        path: P9_03_function/recommender
-        
-    - name: 'Display files'
-      shell: bash
-      run: |
-        ls P9_03_function/recommender/
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+    - name: 'Create function ressources'
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.28.0
+        inlineScript: |
+          cd P9_03_function/
+          ./function_create.sh
