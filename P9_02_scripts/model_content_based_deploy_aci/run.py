@@ -7,6 +7,8 @@ from azureml.core import Model, Environment
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
 
+import dotenv
+
 from ..utils import *
 from ..models import *
 
@@ -14,7 +16,6 @@ from ..models import *
 def model_deploy(
         ws,
         model_deploy_path,
-        wait_for_deployment=False,
         show_output=False
     ):
     """"""
@@ -58,9 +59,11 @@ def model_deploy(
         deployment_config=aciconfig
     )
     
-    if wait_for_deployment:
-        # On attend la fin du déploiement
-        model_aci.wait_for_deployment(show_output=show_output)
+    # On attend la fin du déploiement
+    model_aci.wait_for_deployment(show_output=show_output)
+        
+    # On enregistre l'URL de l'API dans un fichier de variables d'environnement
+    dotenv.set_key(os.path.join(model_deploy_path, ".env"), "MODEL_ACI_URL", model_aci.scoring_uri)
         
     return model_aci
 
@@ -77,7 +80,6 @@ if __name__ == "__main__":
     model_aci = model_deploy(
         ws,
         "P9_02_scripts/model_content_based_deploy_aci",
-        wait_for_deployment=True,
         show_output=True
     )
     
