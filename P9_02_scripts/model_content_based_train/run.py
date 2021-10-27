@@ -64,13 +64,18 @@ def exp_submit(
         "--train_user_article_ratings_id", train_user_article_ratings_ds.as_named_input("train_user_article_ratings_ds"),
         "--valid_user_article_ratings_id", valid_user_article_ratings_ds.as_named_input("valid_user_article_ratings_ds"),
         "--article_profiles_id", article_profiles_ds.as_named_input("article_profiles_ds"),
-        "--train_user_profiles_id", train_user_profiles_ds.as_named_input("train_user_profiles_ds"),
-
-        # Hyperparamètres
-        "--rating_col", params.get("rating_col"),
-        "--num_vars_scale", params.get("num_vars_scale"),
-        "--cat_vars_scale", params.get("cat_vars_scale"),
+        "--train_user_profiles_id", train_user_profiles_ds.as_named_input("train_user_profiles_ds")
     ]
+    
+    # On ajoute les hyperparamètres si ils sont présents
+    hyperparameters = [
+        "rating_col",
+        "num_vars_scale",
+        "cat_vars_scale"
+    ]
+    for i in hyperparameters:
+        if i in params:
+            args += [f"--{i}", params.get(i)]
     
     # On crée la configuration d'exécution du script d'entrainement
     src = ScriptRunConfig(

@@ -12,7 +12,6 @@ from ..utils import *
 from ..models import *
 
 
-# +
 def exp_submit(
         ws,
         model_train_path,
@@ -57,21 +56,6 @@ def exp_submit(
     train_user_article_ratings_ds = Dataset.get_by_name(ws, params.get("train_user_article_ratings"))
     valid_user_article_ratings_ds = Dataset.get_by_name(ws, params.get("valid_user_article_ratings"))
     article_profiles_ds = Dataset.get_by_name(ws, params.get("article_profiles"))
-    
-#     # On définit les paramètres de l'expérience
-#     args = [
-#         # Jeux de données
-#         "--train_user_article_ratings_id", train_user_article_ratings_ds.as_named_input("train_user_article_ratings_ds"),
-#         "--valid_user_article_ratings_id", valid_user_article_ratings_ds.as_named_input("valid_user_article_ratings_ds"),
-#         "--article_profiles_id", article_profiles_ds.as_named_input("article_profiles_ds"),
-
-#         # Hyperparamètres
-#         "--rating_col", params.get("rating_col", ""),
-#         "--n_factors", params.get("n_factors", 0),
-#         "--n_epochs", params.get("n_epochs", 0),
-#         "--lr_all", params.get("lr_all", 0),
-#         "--reg_all", params.get("reg_all", 0)
-#     ]
     
     # On définit les paramètres représentant des jeux de données
     args = [
@@ -125,8 +109,6 @@ def exp_submit(
     
     return run
 
-
-# -
 
 if __name__ == "__main__":
     # On charge les variables d'environnemnt
