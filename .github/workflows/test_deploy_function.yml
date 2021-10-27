@@ -1,0 +1,27 @@
+name: Test deploy function
+
+on:
+  workflow_dispatch:
+
+env:
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  AZURE_WORKSPACE: ${{ secrets.AZURE_WORKSPACE }}
+  PYTHON_VERSION: '3.8.8'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v2
+      with:
+        name: scoring_uri
+        path: P9_03_function/recommender
+        
+    - name: 'Display files'
+      shell: bash
+      run: |
+        ls P9_03_function/recommender/
