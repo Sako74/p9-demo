@@ -26,4 +26,4 @@ jobs:
     - name: 'Train model'
       shell: bash
       run: |
-        $CONDA/bin/python -m P9_02_scripts.model_content_based_train.run
+        $CONDA/bin/python -m P9_02_scripts.model_collaborative_filtering_train.run
