@@ -1,0 +1,94 @@
+name: Train and deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  AZURE_WORKSPACE: ${{ secrets.AZURE_WORKSPACE }}
+  AZURE_FUNCTIONAPP_NAME: p9-recommender-function
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'P9_03_function'
+  PYTHON_VERSION: '3.8.8'
+
+jobs:
+  model_train:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        $CONDA/bin/conda env update --file P9_01_notebooks/conda_env.yml --name base
+    - name: 'Train model'
+      shell: bash
+      run: |
+        $CONDA/bin/python -m P9_02_scripts.model_content_based_train.run
+
+  model_deploy_aci:
+    needs: model_train
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        $CONDA/bin/conda env update --file P9_01_notebooks/conda_env.yml --name base
+        
+    - name: 'Deploy model'
+      shell: bash
+      run: |
+        $CONDA/bin/python -m P9_02_scripts.model_content_based_deploy_aci.run
+        
+    - name: 'Upload artifacts'
+      uses: actions/upload-artifact@v2
+      with:
+        name: scoring_uri
+        path: P9_02_scripts/model_content_based_deploy_aci/.env
+
+  function_deploy:
+    needs: model_deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+      
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        echo MODEL_ACI_URL="http://90b45527-29a5-4207-a971-66ff7f62daef.northeurope.azurecontainer.io/score" > recommender/.env
+        popd
+        
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v2
+      with:
+        name: scoring_uri
+        path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/recommender/
+        
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
