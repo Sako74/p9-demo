@@ -120,11 +120,18 @@ if __name__ == "__main__":
     ws = get_ws(azure_credentials, azure_workspace)
     
     # On soummet l'exécution de l'expérience
-    exp_submit(
+    run = exp_submit(
         ws,
         "P9_02_scripts/model_content_based_train",
         params=None,
         gs_params=None,
         wait_for_completion=True,
         show_output=True
+    )
+    
+    # On enregistre le modèle
+    model = run.register_model(
+        model_name="recommender",
+        model_path="outputs/model.joblib",
+        tags={"class_name": "ContentBasedRecommender"}
     )
