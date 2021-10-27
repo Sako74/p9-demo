@@ -59,7 +59,7 @@ jobs:
         path: P9_02_scripts/model_content_based_deploy_aci/.env
 
   function_deploy:
-    needs: model_deploy
+    needs: model_deploy_aci
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
