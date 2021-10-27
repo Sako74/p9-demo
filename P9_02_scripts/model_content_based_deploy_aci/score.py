@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
 import json
 from datetime import datetime
-# import logging
+import logging
 
-from training import *
+from models import *
+
+logging.basicConfig(format="%(asctime)s | %(levelname)s | %(message)s", level=logging.INFO)
 
 
-# +
-# logging.basicConfig(level=logging.DEBUG)
-
-# +
 def init():
     global model
     
@@ -18,14 +21,7 @@ def init():
     # For multiple models, it points to the folder containing all deployed models (./azureml-models)
     model_path = os.path.join(os.getenv("AZUREML_MODEL_DIR"), "model.joblib")
     model = joblib.load(model_path)
-    
-#     MODEL_PATH = os.path.join(os.getenv("AZUREML_MODEL_DIR"), "model")
-    
-#     # On charge le modèle
-#     model = joblib.load(os.path.join(MODEL_PATH, "content_based_recommender.joblib"))
 
-
-# -
 
 def run(data_json):
     """
@@ -47,6 +43,9 @@ def run(data_json):
     # On effectue la prédiction des recommandations
     article_ids = model.recommand(user_id, session_start_dt, top_n=top_n)
     article_ids = [str(i) for i in article_ids]
+    
+    # On log la prédiction afin de pouvoir la monitorer
+    logging.info(f"Article ids for user {user_id} : {article_ids}")
 
     # On met à jour les données
     data.update({"article_ids": article_ids})
