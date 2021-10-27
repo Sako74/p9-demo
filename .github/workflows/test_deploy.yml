@@ -23,7 +23,7 @@ jobs:
       shell: bash
       run: |
         $CONDA/bin/conda env update --file P9_01_notebooks/conda_env.yml --name base
-    - name: 'Train model'
+    - name: 'Deploy model'
       shell: bash
       run: |
         $CONDA/bin/python -m P9_02_scripts.model_content_based_deploy_aci.run
