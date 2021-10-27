@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-  AZURE_WORKSPACE: ${{ secrets.AZURE_WORKSPACE }}
+  AZURE_FUNCTIONAPP_NAME: p9-recommender-function
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'P9_03_function'
   PYTHON_VERSION: '3.8.8'
 
 jobs:
@@ -15,15 +15,21 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
       
-    - name: 'Azure Login'
-      uses: azure/login@v1
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v2
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-    - name: 'Create function ressources'
-      uses: azure/CLI@v1
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
       with:
-        azcliversion: 2.28.0
-        inlineScript: |
-          cd P9_03_function/
-          ./function_create.sh
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
