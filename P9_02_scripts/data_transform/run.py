@@ -240,7 +240,7 @@ if __name__ == "__main__":
     ws = get_ws(azure_credentials, azure_workspace)
     
     # On crée le chemin du dossier des scripts de transformation des données
-    data_transform_path = SCRIPTS_PATH + "data_transform"
+    data_transform_path = "P9_02_scripts/data_transform"
     
     # On crée l'étape d'extraction des données du feature store
     (
