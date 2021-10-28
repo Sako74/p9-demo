@@ -6,6 +6,8 @@ from azureml.exceptions import ComputeTargetException
 
 from azureml.core.authentication import ServicePrincipalAuthentication
 
+RANDOM_SEED = 42
+
 
 def get_ws(azure_credentials, azure_workspace):
     """"""

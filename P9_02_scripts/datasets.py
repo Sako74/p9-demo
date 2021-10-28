@@ -9,7 +9,7 @@ from numpy.random import MT19937
 from numpy.random import RandomState, SeedSequence
 import pandas as pd
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 from sklearn.metrics.pairwise import cosine_similarity
 
