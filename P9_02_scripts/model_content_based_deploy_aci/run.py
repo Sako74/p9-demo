@@ -2,7 +2,7 @@
 import os
 import json
 
-from azureml.core import Model, Environment
+from azureml.core import Model, Environment, Webservice
 
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
@@ -56,7 +56,8 @@ def model_deploy(
         name="p9-recommender-aci",
         models=[model], 
         inference_config=inference_config, 
-        deployment_config=aciconfig
+        deployment_config=aciconfig,
+        overwrite=True
     )
     
     # On attend la fin du déploiement
@@ -68,6 +69,7 @@ def model_deploy(
     return model_aci
 
 
+# +
 if __name__ == "__main__":
     # On charge les variables d'environnemnt
     azure_credentials = json.loads(os.getenv("AZURE_CREDENTIALS"))
@@ -75,6 +77,10 @@ if __name__ == "__main__":
     
     # On charge l’espace de travail Azure Machine Learning existant
     ws = get_ws(azure_credentials, azure_workspace)
+    
+#     # On supprime le point de terminaison existe déja
+#     model_aci = Webservice(ws, "p9-recommender-aci")
+#     model_aci.delete()
     
     # On déploie le modèle
     model_aci = model_deploy(

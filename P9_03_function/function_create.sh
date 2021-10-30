@@ -1,10 +1,5 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
-# On vérifie que le fichier contenant les varaibles d'environnement existe bien
-if [ ! -e "recommender/.env" ]; then
-  echo "Vous devez créer et compléter le fichier recommender/.env (voir recommender/.env.example)" 1>&2
-  exit 1
-fi
 
 # On installe la clé GPG du référentiel de packages Microsoft pour valider l’intégrité du package
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
