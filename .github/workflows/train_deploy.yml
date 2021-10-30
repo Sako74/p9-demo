@@ -11,27 +11,7 @@ env:
   PYTHON_VERSION: '3.8.8'
 
 jobs:
-  data_transform:
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v2
-      
-    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-    - name: 'Resolve Project Dependencies Using Pip'
-      shell: bash
-      run: |
-        $CONDA/bin/conda env update --file P9_01_notebooks/conda_env.yml --name base
-    - name: 'Transform data'
-      shell: bash
-      run: |
-        $CONDA/bin/python -m P9_02_scripts.data_transform.run
-  
   model_train:
-    needs: data_transform
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
