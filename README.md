@@ -100,6 +100,17 @@ Ce dossier contient les notebooks du projet.
 
 Ce dossier contient tous les scripts permettant d'entrainer et de déployer un modèle de recommandation.
 
+Chaque dossier `<nom du modèle>_train` contient 4 fichiers :
+- `conda_env.yml` : environnement conda.
+- `params.json` : paramètres du meilleur modèle.
+- `run.py` : script permettant de lancer l'entrainement du modèle sur des clusters de calcul.
+- `train.py` : script d'entrainement du modèle.
+
+Chaque dossier `<nom du modèle>_deploy_aci` contient 3 fichiers :
+- `conda_env.yml` : environnement conda.
+- `run.py` : script permettant de déployer le modèle sur Azure ACI.
+- `score.py` : script d'inférence du modèle.
+
 ## Dossier P9_03_function
 
 Ce dossier contient le code de l'Azure function qui sert de service de recommandation.
@@ -110,4 +121,4 @@ Ce dossier contient le code l'application mobile.
 
 On trouvera le repository originel de l'application mobile à l'addresse suivante : [bookshelf](https://github.com/OpenClassrooms-Student-Center/bookshelf).
 
-On pourra utiliser le document suivant afin de tester l'application en émulant un téléphone Android sur ordinateur : [Mode opératoire de test en local de l’Azure function](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/projects/Ing%C3%A9nieur_IA_P9/Mode+ope%CC%81ratoire+test+Azure+function_V1.1.docx.pdf).
+On pourra aussi tester l'application en émulant un téléphone Android sur ordinateur : [Mode opératoire de test en local de l’Azure function](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/projects/Ing%C3%A9nieur_IA_P9/Mode+ope%CC%81ratoire+test+Azure+function_V1.1.docx.pdf).
