@@ -108,4 +108,7 @@ print("On enregistre les résultats de l'évaluation.")
 run.log("precision@5", res.iloc[0]["precision@5"])
 run.log("recall@5", res.iloc[0]["recall@5"])
 
+res["training_time_s"] = [training_time]
+res["evaluation_time_s"] = [evaluation_time]
+
 res.to_parquet(OUTPUT_PATH + "res.parquet", index=False)

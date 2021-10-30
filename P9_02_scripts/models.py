@@ -132,11 +132,13 @@ class Recommender(ABC):
             top_n=top_n
         )
 
-class MostRecentRecommender(Recommender):
+class BaselineRecommender(Recommender):
     """"""
     
-    def __init__(self, article_profiles, user_article_ratings):
+    def __init__(self, article_profiles, user_article_ratings, baseline_type="random"):
         super().__init__(article_profiles, user_article_ratings)
+        
+        self.baseline_type = baseline_type
         
     def fit(self):
         pass
@@ -147,11 +149,21 @@ class MostRecentRecommender(Recommender):
             self.article_profiles["article_id"].isin(no_click_article_ids)
         ]
         
-        # On classe les articles par récence et ensuite par nombre de clicks
-        no_click_article_profiles = no_click_article_profiles.sort_values(
-            by=["created_dt", "click_nb"],
-            ascending=True
-        )
+        if self.baseline_type == "most_recent":
+            # On classe les articles par récence et ensuite par nombre de clicks
+            no_click_article_profiles = no_click_article_profiles.sort_values(
+                by=["created_dt", "click_nb"],
+                ascending=True
+            )
+        elif self.baseline_type == "most_popular":
+            # On classe les articles par nombre de clicks et ensuite par récence
+            no_click_article_profiles = no_click_article_profiles.sort_values(
+                by=["click_nb", "created_dt"],
+                ascending=True
+            )
+        else:
+            # On classe les articles au hasard
+            no_click_article_profiles = no_click_article_profiles.sample(frac=1)
         
         best_article_ids = no_click_article_profiles["article_id"].values
     
@@ -178,7 +190,7 @@ class ContentBasedRecommender(Recommender):
         self.num_vars_scale = num_vars_scale
         self.cat_vars_scale = cat_vars_scale
         
-        self.cold_start_model = MostRecentRecommender(article_profiles, user_article_ratings)
+        self.cold_start_model = BaselineRecommender(article_profiles, user_article_ratings)
         
     def fit(self):
         # On crée l'encodeur des variables de type catégorie
@@ -262,7 +274,7 @@ class CollaborativeRecommender(Recommender):
         
         self.algo = surprise.SVD(**kwargs)
         
-        self.cold_start_model = MostRecentRecommender(article_profiles, user_article_ratings)
+        self.cold_start_model = BaselineRecommender(article_profiles, user_article_ratings)
         
     def fit(self):
         # On copie les notes

@@ -32,7 +32,7 @@ def exp_submit(
         location="northeurope",
         priority="lowpriority",
         vm_size="STANDARD_DS3_V2",
-        max_nodes=5
+        max_nodes=4
     )
 
     # On spécifie les packages à installer
@@ -66,7 +66,10 @@ def exp_submit(
     ]
     
     # On ajoute les hyperparamètres si ils sont présents
-    hyperparameters = ["rating_col"]
+    hyperparameters = [
+        "rating_col",
+        "baseline_type"
+    ]
     for i in hyperparameters:
         if i in params:
             args += [f"--{i}", params.get(i)]

@@ -24,6 +24,7 @@ parser.add_argument("--article_profiles_id", type=str)
 
 # Hyperparamètres
 parser.add_argument("--rating_col", type=str)
+parser.add_argument("--baseline_type", type=str)
 
 args = parser.parse_args()
 
@@ -48,7 +49,11 @@ valid_ratings = valid_ratings.rename(columns={args.rating_col: "rating"})
 
 print("On crée le modèle.")
 
-model = MostRecentRecommender(article_profiles, train_ratings)
+model = BaselineRecommender(
+    article_profiles,
+    train_ratings,
+    baseline_type=args.baseline_type
+)
 
 print("On entraine le modèle.")
 
@@ -73,7 +78,7 @@ start_time = time.time()
 
 res = get_precision_recall_n_score(
     model,
-    "MostRecentRecommender",
+    "BaselineRecommender",
     valid_ratings,
     article_profiles,
     top_n=5
@@ -90,5 +95,8 @@ print("On enregistre les résultats de l'évaluation.")
 
 run.log("precision@5", res.iloc[0]["precision@5"])
 run.log("recall@5", res.iloc[0]["recall@5"])
+
+res["training_time_s"] = [training_time]
+res["evaluation_time_s"] = [evaluation_time]
 
 res.to_parquet(OUTPUT_PATH + "res.parquet", index=False)

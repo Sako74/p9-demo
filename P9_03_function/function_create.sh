@@ -1,6 +1,5 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
-
 # On installe la clé GPG du référentiel de packages Microsoft pour valider l’intégrité du package
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
 sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
@@ -37,3 +36,11 @@ az functionapp create \
   --runtime-version 3.8 \
   --functions-version 3 \
   --os-type linux
+
+echo "Créer un secret Github avec la clé AZURE_FUNCTIONAPP_PUBLISH_PROFILE et la valeur suivante :"
+
+# On affiche le profile de publication de l'application
+az functionapp deployment list-publishing-profiles \
+  --name $functionAppName \
+  --resource-group $ressourceGroup \
+  --xml
