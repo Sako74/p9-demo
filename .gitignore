@@ -6,6 +6,7 @@
 __pycache__
 P9_01_notebooks/data/*
 !P9_01_notebooks/data/img/
+!P9_01_notebooks/data/gif/
 outputs
 *.ipynb
 !*_no_out.ipynb

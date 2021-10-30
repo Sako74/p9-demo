@@ -1,1 +1,1 @@
-{"train_user_article_ratings": "train_user_article_ratings", "valid_user_article_ratings": "valid_user_article_ratings", "article_profiles": "article_profiles", "lr_all": 0.025, "n_epochs": 10, "n_factors": 200, "rating_col": "rating_click_nb", "reg_all": 0.1}
+{"train_user_article_ratings": "train_user_article_ratings", "valid_user_article_ratings": "valid_user_article_ratings", "article_profiles": "article_profiles", "lr_all": 0.025, "n_epochs": 20, "n_factors": 200, "rating_col": "rating_click_nb", "reg_all": 0.1}
