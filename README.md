@@ -86,10 +86,28 @@ Ce secret est utilisé par la Github action [Azure/functions-action@v1](https://
 
 # Organisation du projet
 
-Les notebooks ont été développés via l'interface web du Studio de Microsoft Azure Machine Learning.
+Les projet est répartit en 5 dossiers.
 
-Toutes les dépendances sont listées dans les fichiers `*.yml`.
+## Dossier .github/workflows
 
-Tous les scripts sont disponibles dans le dossier `/scripts`.
+Ce dossier contient la description des pipelines de déploiement continu.
 
-# Test de l'application mobile
+## Dossier P9_01_notebooks
+
+Ce dossier contient les notebooks du projet.
+
+## Dossier P9_02_scripts
+
+Ce dossier contient tous les scripts permettant d'entrainer et de déployer un modèle de recommandation.
+
+## Dossier P9_03_function
+
+Ce dossier contient le code de l'Azure function qui sert de service de recommandation.
+
+## Dossier P9_04_mobile_app
+
+Ce dossier contient le code l'application mobile.
+
+On trouvera le repository originel de l'application mobile à l'addresse suivante : [bookshelf](https://github.com/OpenClassrooms-Student-Center/bookshelf).
+
+On pourra utiliser le document suivant afin de tester l'application en émulant un téléphone Android sur ordinateur : [Mode opératoire de test en local de l’Azure function](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/projects/Ing%C3%A9nieur_IA_P9/Mode+ope%CC%81ratoire+test+Azure+function_V1.1.docx.pdf).
