@@ -50,44 +50,36 @@ RANDOM_SEED = 42
 MAX_TOTAL_RUNS = 50
 
 
-def get_compute_target(ws, name, location, priority, vm_size, max_nodes=1):
-    """"""
-    try:
-        # On charge le cluster de calcul si il existe
-        compute_target = ComputeTarget(workspace=ws, name=name)
-    except ComputeTargetException:
-        # Si le cluster n'existe pas, on on en crée un nouveau
-        config = AmlCompute.provisioning_configuration(
-            vm_size="STANDARD_NC6",
-            location=location,
-            vm_priority="lowpriority",
-            min_nodes=0,
-            max_nodes=1
-        )
-
-        compute_target = ComputeTarget.create(
-            workspace=ws,
-            name=name,
-            provisioning_configuration=config
-        )
-        
-        compute_target.wait_for_completion(
-            show_output=True,
-            min_node_count=None,
-            timeout_in_minutes=20
-        )
-        
-    return compute_target
-
-
 def clear_datastore(datastore):
-    """Supprime tout le contenu du datastore."""
+    """Supprime tout le contenu d'un Blob Datastore.
+    
+    Parameters
+    ----------
+        datastore : Azure Blob Datastore
+            Blob Datastore Azure.
+    """
+    
     for i in datastore.blob_service.list_blobs(datastore.container_name):
         datastore.blob_service.delete_blob(datastore.container_name, i.name)
 
 
 def create_update_clicks_dataset(ws, datastore):
-    """"""
+    """Crée/update le Dataset clicks avec tous les
+    fichiers clicks présents sur le datatstore.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        datastore : Azure Blob Datastore
+            Blob Datastore Azure.
+
+    Returns
+    ----------
+        Azure Dataset
+            Dataset clicks.
+    """
+    
     # On crée un dataset avec tous les fichiers clicks
     clicks_ds = Dataset.Tabular.from_parquet_files(path=(datastore, "clicks/**/data.parquet"))
 
@@ -101,7 +93,22 @@ def create_update_clicks_dataset(ws, datastore):
 
 
 def create_update_articles_dataset(ws, datastore):
-    """"""
+    """Crée/update le Dataset articles avec tous les
+    fichiers articles présents sur le datatstore.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        datastore : Azure Blob Datastore
+            Blob Datastore Azure.
+
+    Returns
+    ----------
+        Azure Dataset
+            Dataset articles.
+    """
+    
     # On crée un dataset avec tous les fichiers articles
     articles_ds = Dataset.Tabular.from_parquet_files(path=(datastore, "articles/**/data.parquet"))
 
@@ -115,7 +122,21 @@ def create_update_articles_dataset(ws, datastore):
 
 
 def get_last_run(ws, exp_name):
-    """Renvoie la dernière exécution de l'expérience spécifiée"""
+    """Renvoie la dernière exécution de l'expérience spécifiée.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        exp_name : str
+            Nom de l'expérience.
+
+    Returns
+    ----------
+        Azure Run
+            Dernière exécution de l'expérience.
+    """
+    
     # On récupère l'exécution de la dernière expérience.
     # Ce code a été ajouté en cas de coupure de connexion avec le notebook...
     exp = Experiment(workspace=ws, name=exp_name)

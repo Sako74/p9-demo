@@ -14,6 +14,8 @@ logging.basicConfig(format="%(asctime)s | %(levelname)s | %(message)s", level=lo
 
 
 def init():
+    """Chargement du modèle dans une variable globale."""
+    
     global model
     
     # AZUREML_MODEL_DIR is an environment variable created during deployment.
@@ -24,13 +26,22 @@ def init():
 
 
 def run(data_json):
-    """
-    La donnée doit respecter le format de l'exemple suivant :
-    {
-        "user_id": "1234",
-        "session_start_dt": "2017-10-16T12:00:00",
-        "top_n": 5,
-    }
+    """Inférence du modèle à partir de data_json. 
+
+    Parameters
+    ----------
+        data_json : str
+            La donnée json respectant le format de l'exemple suivant :
+            {
+                "user_id": "1234",
+                "session_start_dt": "2017-10-16T12:00:00",
+                "top_n": 5,
+            }
+
+    Returns
+    ----------
+        dict
+            Donnée d'entrée complétée par les ids des articles recommandés.
     """
 
     # On extrait les données

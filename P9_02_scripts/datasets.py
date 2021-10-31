@@ -17,7 +17,19 @@ DEFAULT_RATING_COL = "rating_click_nb"
 
 
 def get_clicks(clicks_dir):
-    """Renvoie un DataFrame contenant les articles cliqués par les utilisateurs."""
+    """Renvoie un DataFrame contenant les articles cliqués par les utilisateurs
+    ainsi que les informations des sessions utilisateur.
+    
+    Parameters
+    ----------
+        clicks_dir : str
+            Dossier contenant les fichiers de données.
+
+    Returns
+    ----------
+        DataFrame
+            DataFrame contenant les articles cliqués.
+    """
     
     # On ouvre les fichiers et on ajoute les données dans une liste
     clicks = []
@@ -60,7 +72,18 @@ def get_clicks(clicks_dir):
     return clicks
 
 def upload_clicks_in_datastore(clicks, datastore, show_progress=True):
-    """"""
+    """Upload les données de clicks dans le datastore.
+    
+    Parameters
+    ----------
+        clicks : DataFrame
+            Données de clicks.
+        datastore : Azure Datastore
+            Datastore.
+        show_progress : bool
+            Affiche les logs de progression de l'upload.
+    """
+    
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         # On regroupe les données par jour
         grp = clicks.groupby(pd.Grouper(key="click_dt", freq="D"))
@@ -85,7 +108,20 @@ def upload_clicks_in_datastore(clicks, datastore, show_progress=True):
 
 
 def get_articles(articles_metadata_path, articles_embeddings_path):
-    """Renvoie un DataFrame contenant des informations sur les articles."""
+    """Renvoie un DataFrame contenant des informations sur les articles.
+    
+    Parameters
+    ----------
+        articles_metadata_path : str
+            Chemin du fichier contenant les metadatas.
+        articles_embeddings_path : str
+            Chemin du fichier contenant les embeddings.
+
+    Returns
+    ----------
+        DataFrame
+            DataFrame contenant les informations sur les articles.
+    """
     
     # On récupère les métadonnées des articles
     articles = pd.read_csv(articles_metadata_path)
@@ -131,7 +167,18 @@ def get_articles(articles_metadata_path, articles_embeddings_path):
 
 
 def upload_articles_in_datastore(articles, datastore, show_progress=True):
-    """"""
+    """Upload les données des articles dans le datastore.
+    
+    Parameters
+    ----------
+        articles : DataFrame
+            Données des articles.
+        datastore : Azure Datastore
+            Datastore.
+        show_progress : bool
+            Affiche les logs de progression de l'upload.
+    """
+    
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         # On regroupe les données par an
         grp = articles.groupby(pd.Grouper(key="created_dt", freq="Y"))
@@ -156,7 +203,21 @@ def upload_articles_in_datastore(articles, datastore, show_progress=True):
 
 
 def filter_clicks(clicks, click_article_nb_ge=5):
-    """"""
+    """Filtre les utilisateur en ne conservant que ceux qui ont
+    un nombre total de clicks >= click_article_nb_ge.
+    
+    Parameters
+    ----------
+        clicks : DataFrame
+            Données des clicks.
+        click_article_nb_ge : int
+            Nombre minimal de clicks par utilisateur.
+
+    Returns
+    ----------
+        DataFrame
+            Clicks filtrés.
+    """
     
     # On groupe les données par utilisateur
     click_article_nbs = clicks.groupby("user_id").agg({"click_article_id": "nunique"})
@@ -176,6 +237,16 @@ def filter_clicks(clicks, click_article_nb_ge=5):
 def get_user_article_ratings(clicks):
     """On renvoie un DataFrame contenant les notes attribués
     par les utilisateur aux articles sur lesquels ils ont cliqués.
+    
+    Parameters
+    ----------
+        clicks : DataFrame
+            Données des clicks.
+
+    Returns
+    ----------
+        DataFrame
+            Notes attribués par les utilisateur aux articles.
     """
     
     # On filtre les variables
@@ -215,6 +286,20 @@ def get_user_article_ratings(clicks):
 def add_user_article_ratings_tns(user_article_ratings, tn_nb=None, random_state=None):
     """On ajoute des vrais négatifs en prenant au hazard
     des articles non cliqués par l'utilisateur.
+    
+    Parameters
+    ----------
+        user_article_ratings : DataFrame
+            Notation des articles.
+        tn_nb : int
+            Nombre de vrais négatif.
+        random_state : int
+            Valeur d'initialisation du générateur aléatoire.
+
+    Returns
+    ----------
+        DataFrame
+            Notation des articles avec ajout de vrais négatifs.
     """
     
     if tn_nb is None:
@@ -257,7 +342,20 @@ def add_user_article_ratings_tns(user_article_ratings, tn_nb=None, random_state=
 
 
 def get_article_profiles(clicks, articles):
-    """On renvoie un DataFrame représentant les profils des articles."""
+    """On renvoie un DataFrame représentant les profils des articles.
+    
+    Parameters
+    ----------
+        clicks : DataFrame
+            Données de clicks.
+        articles : DataFrame
+            Données des articles.
+
+    Returns
+    ----------
+        DataFrame
+            Profils des articles.
+    """
     
     # On copie les données
     article_profiles = articles.copy()
@@ -304,7 +402,20 @@ def get_article_profiles(clicks, articles):
     return article_profiles
 
 def get_user_profiles(clicks, article_profiles):
-    """On renvoie un DataFrame représentant les profils des utilisateurs."""
+    """On renvoie un DataFrame représentant les profils des utilisateurs.
+    
+    Parameters
+    ----------
+        clicks : DataFrame
+            Données de clicks.
+        article_profiles : DataFrame
+            Profils des articles.
+
+    Returns
+    ----------
+        DataFrame
+            Profils des utilisateurs.
+    """
     
     # On regroupe les données par utilisateur
     grp = pd.merge(clicks, article_profiles, how="left", left_on="click_article_id", right_on="article_id")

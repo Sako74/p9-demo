@@ -10,7 +10,21 @@ RANDOM_SEED = 42
 
 
 def get_ws(azure_credentials, azure_workspace):
-    """"""
+    """Renvoie le workspace de Azure ML.
+    
+    Parameters
+    ----------
+        azure_credentials : dict
+            Informations de connexion.
+        azure_workspace : dict
+            Informations sur le workspace.
+
+    Returns
+    ----------
+        Azure Workspace
+            Workspace de Azure ML.
+    """
+    
     # On crée un service d'authentification
     svc_pr = ServicePrincipalAuthentication(
         tenant_id=azure_credentials.get("tenantId"),
@@ -30,7 +44,29 @@ def get_ws(azure_credentials, azure_workspace):
 
 
 def get_compute_target(ws, name, location, priority, vm_size, max_nodes=1):
-    """"""
+    """Crée ou renvoie un cluster de calcul.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        name : str
+            Nom du cluster de calcul.
+        location : str
+            Localisation.
+        priority : str
+            Priorité d'allocation du cluster.
+        vm_size : str
+            Type de machine.
+        max_nodes : int
+            Nombre maximal de noeuds.
+
+    Returns
+    ----------
+        Azure ComputeTarget
+           Cluster de calcul.
+    """
+    
     try:
         # On charge le cluster de calcul si il existe
         compute_target = ComputeTarget(workspace=ws, name=name)

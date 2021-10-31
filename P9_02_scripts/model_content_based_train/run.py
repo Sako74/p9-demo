@@ -20,7 +20,28 @@ def exp_submit(
         wait_for_completion=False,
         show_output=False
     ):
-    """"""
+    """Lance l'exécution de l'entrainement du modèle.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        model_train_path : str
+            Dossier contenant les scripts d'entrainement du modèle.
+        params : dict
+            Paramètres du modèle.
+        gs_params : dict
+            Hyperparamètres à tester.
+        wait_for_completion : bool
+            Attendre la fin de l'entrainement du modèle.
+        show_output : bool
+            Afficher les logs de sortie.
+
+    Returns
+    ----------
+        Azure Run
+            Exécution de l'entrainement du modèle.
+    """
     
     # On crée le nom de l'expérience à partir du nom du dossier
     scripts_path, exp_name = os.path.split(model_train_path)

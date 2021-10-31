@@ -18,7 +18,22 @@ def model_deploy(
         model_deploy_path,
         show_output=False
     ):
-    """"""
+    """Lance le déploiement du modèle sur ACI.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        model_deploy_path : str
+            Dossier contenant les scripts de déploiement du modèle.
+        show_output : bool
+            Afficher les logs de sortie.
+
+    Returns
+    ----------
+        Azure Webservice
+            Service web qui fait tourner le script d'inférence du modèle déployé.
+    """
     
     # On crée le nom de l'expérience à partir du nom du dossier
     scripts_path, model_deploy_dir = os.path.split(model_deploy_path)

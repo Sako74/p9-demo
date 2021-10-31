@@ -18,7 +18,26 @@ PRIMARY_METRIC_NAME = "recall@5"
 
 
 def get_precision_recall_n_score(model, model_name, user_article_ratings, article_profiles, top_n=5):
-    """"""
+    """Calcul les score Precision@top_n et Recall@top_n.
+    
+    Parameters
+    ----------
+        model : Recommender
+            Model de recommandation.
+        model_name : str
+            Nom du model.
+        user_article_ratings : DataFrame
+            Notations des articles.
+        article_profiles : DataFrame
+            Profils des articles.
+        top_n : int
+            Nombre de recommandations faites par le model.
+
+    Returns
+    ----------
+        DataFrame
+            Precision@top_n et Recall@top_n.
+    """
     
     # On récupère les vrais positifs et les vrais négatifs
     tp = user_article_ratings[user_article_ratings["rating"] > 0]
@@ -86,7 +105,25 @@ def get_precision_recall_n_score(model, model_name, user_article_ratings, articl
     return res
 
 def get_no_click_article_ids(user_id, session_start_dt, article_profiles, user_article_ratings):
-    """"""
+    """Renvoie les ids des articles jamais cliqués par l'utilisateur.
+    
+    Parameters
+    ----------
+        user_id : int
+            Id de l'utilisateur.
+        session_start_dt : datetime
+            Horodatatge du début de la session.
+        article_profiles : DataFrame
+            Profils des articles.
+        user_article_ratings : DataFrame
+            Notation des articles.
+
+    Returns
+    ----------
+        DataFrame
+            Ids des articles jamais cliqués par l'utilisateurn.
+    """
+    
     # On récupère la liste des articles parus avant la session de l'utilisateur
     no_click_article_ids = article_profiles[article_profiles["created_dt"] <= session_start_dt]
     no_click_article_ids = set(no_click_article_ids["article_id"])
@@ -102,7 +139,7 @@ def get_no_click_article_ids(user_id, session_start_dt, article_profiles, user_a
 
 
 class Recommender(ABC):
-    """"""
+    """Classe abstraite d'un model de recommandation."""
     
     def __init__(self, article_profiles, user_article_ratings):
         self.article_profiles = article_profiles
@@ -133,7 +170,7 @@ class Recommender(ABC):
         )
 
 class BaselineRecommender(Recommender):
-    """"""
+    """Model naïf de recommandation."""
     
     def __init__(self, article_profiles, user_article_ratings, baseline_type="random"):
         super().__init__(article_profiles, user_article_ratings)
@@ -174,7 +211,7 @@ class BaselineRecommender(Recommender):
             return best_article_ids[:top_n]
 
 class ContentBasedRecommender(Recommender):
-    """"""
+    """Model de recommandation de type content based."""
     
     def __init__(
             self,
@@ -267,7 +304,7 @@ class ContentBasedRecommender(Recommender):
 
 
 class CollaborativeRecommender(Recommender):
-    """"""
+    """Model de recommandation de type collaborative filtering"""
     
     def __init__(self, article_profiles, user_article_ratings, **kwargs):
         super().__init__(article_profiles, user_article_ratings)

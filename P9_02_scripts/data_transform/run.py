@@ -12,7 +12,23 @@ from ..datasets import *
 
 
 def get_default_step_ressources(ws, data_transform_path):
-    """"""
+    """Renvoie les ressources par défaut d'exécution d'une
+    étape du pipeline de transformation des données.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        data_transform_path : str
+            Dossier contenant les scripts du pipeline de transformation des données.
+
+    Returns
+    ----------
+        Azure ComputeTarget
+            Cluster de calcul.
+        Azure RunConfiguration
+            Environnement d'execution conda.
+    """
     
     # On charge le cluster de calcul de type CPU si il existe ou on en crée un nouveau
     compute_target = get_compute_target(
@@ -48,7 +64,37 @@ def get_data_extraction_step(
         valid_day_nb,
         train_day_nb
     ):
-    """"""
+    """Renvoie l'étape d'extraction des données du pipeline de transformation des données.
+    On récupère les données des Datasets et on effectue un split chronologique des données.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        data_transform_path : str
+            Dossier contenant les scripts du pipeline de transformation des données.
+        test_end_dt : datetime
+            Horodatage maximal qui sera présent dans le jeu de test.
+        test_day_nb : int
+            Nombre de jour que l'on prendra dans le jeu de test.
+        valid_day_nb : int
+            Nombre de jour que l'on prendra dans le jeu de validation.
+        train_day_nb : int
+            Nombre de jour que l'on prendra dans le jeu d'entrainement.
+
+    Returns
+    ----------
+        Azure PythonScriptStep
+            Etape du pipeline.
+        Azure PipelineData
+            Représentation du chemin du fichier test_clicks.
+        Azure PipelineData
+            Représentation du chemin du fichier valid_clicks.
+        Azure PipelineData
+            Représentation du chemin du fichier train_clicks.
+        Azure PipelineData
+            Représentation du chemin du fichier articles.
+    """
     
     # On récupère le dossier du script
     scripts_path, data_transform_dir = os.path.split(data_transform_path)
@@ -100,7 +146,27 @@ def get_user_article_ratings_step(
         tn_nb,
         dataset_name
     ):
-    """"""
+    """Renvoie l'étape de création des notations des articles
+    du pipeline de transformation des données.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        data_transform_path : str
+            Dossier contenant les scripts du pipeline de transformation des données.
+        clicks_path : Azure PipelineData
+            Représentation du chemin du fichier clicks.
+        tn_nb : int
+            Nombre de vrais positifs à ajouter.
+        dataset_name : int
+            Nom du Dataset enregistré à la fin de cet étape.
+
+    Returns
+    ----------
+        Azure PythonScriptStep
+            Etape du pipeline.
+    """
     
     # On récupère le dossier du script
     scripts_path, data_transform_dir = os.path.split(data_transform_path)
@@ -136,7 +202,29 @@ def get_article_profiles_step(
         articles_path,
         dataset_name
     ):
-    """"""
+    """Renvoie l'étape de création des profils des articles
+    du pipeline de transformation des données.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        data_transform_path : str
+            Dossier contenant les scripts du pipeline de transformation des données.
+        clicks_path : Azure PipelineData
+            Représentation du chemin du fichier clicks.
+        articles_path : Azure PipelineData
+            Représentation du chemin du fichier articles.
+        dataset_name : int
+            Nom du Dataset enregistré à la fin de cet étape.
+
+    Returns
+    ----------
+        Azure PythonScriptStep
+            Etape du pipeline.
+        Azure PipelineData
+            Représentation du chemin du fichier des profils des articles.
+    """
     
     # On récupère le dossier du script
     scripts_path, data_transform_dir = os.path.split(data_transform_path)
@@ -179,7 +267,27 @@ def get_user_profiles_step(
         article_profiles_path,
         dataset_name
     ):
-    """"""
+    """Renvoie l'étape de création des profils des utilisateurs
+    du pipeline de transformation des données.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        data_transform_path : str
+            Dossier contenant les scripts du pipeline de transformation des données.
+        clicks_path : Azure PipelineData
+            Représentation du chemin du fichier clicks.
+        article_profiles_path : Azure PipelineData
+            Représentation du chemin du fichier article_profiles.
+        dataset_name : int
+            Nom du Dataset enregistré à la fin de cet étape.
+
+    Returns
+    ----------
+        Azure PythonScriptStep
+            Etape du pipeline.
+    """
     
     # On récupère le dossier du script
     scripts_path, data_transform_dir = os.path.split(data_transform_path)
@@ -209,7 +317,26 @@ def get_user_profiles_step(
 
 
 def exp_submit(ws, steps, regenerate_outputs=True, wait_for_completion=False, show_output=False):
-    """"""
+    """Crée le pipeline et soummet son exécution à un cluster de calcul.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        steps : list de Azure PythonScriptStep
+            Liste des étapes du pipeline.
+        regenerate_outputs : bool
+            Forcer la regénération des données lors de la ré-exécution du pipeline.
+        wait_for_completion : bool
+            Attendre la fin de l'exécution du pipeline.
+        show_output : bool
+            Afficher les logs de sortie.
+
+    Returns
+    ----------
+        Azure Run
+            Exécution du pipeline.
+    """
     
     # On crée le pipeline
     pipeline = Pipeline(workspace=ws, steps=steps)

@@ -13,7 +13,25 @@ from datasets import *
 
 
 def get_clicks_dataset(ws, start_time=None, end_time=None, include_boundary=True):
-    """"""
+    """Renvoie le Dataset clicks filtré par une fenêtre temporelle.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        start_time : datetime
+            Horodatage minimal d'un click.
+        end_time : datetime
+            Horodatage maximal d'un click.
+        include_boundary : bool
+            Inclut end_time.
+
+    Returns
+    ----------
+        Azure Dataset
+            Dataset clicks filtré.
+    """
+    
     # On récupère le dataset
     clicks_ds = Dataset.get_by_name(ws, "clicks")
     
@@ -29,7 +47,25 @@ def get_clicks_dataset(ws, start_time=None, end_time=None, include_boundary=True
 
 
 def get_articles_dataset(ws, start_time=None, end_time=None, include_boundary=True):
-    """"""
+    """Renvoie le Dataset articles filtré par une fenêtre temporelle.
+    
+    Parameters
+    ----------
+        ws : Azure Workspace
+            Workspace de Azure ML.
+        start_time : datetime
+            Horodatage minimal d'un article.
+        end_time : datetime
+            Horodatage maximal d'un article.
+        include_boundary : bool
+            Inclut end_time.
+
+    Returns
+    ----------
+        Azure Dataset
+            Dataset articles filtré.
+    """
+    
     # On récupère le dataset
     articles_ds = Dataset.get_by_name(ws, "articles")
     
