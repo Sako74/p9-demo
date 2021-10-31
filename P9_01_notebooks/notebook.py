@@ -11,7 +11,7 @@ import seaborn as sns
 
 from azureml.core import (
     Workspace, Dataset, Datastore, Environment,
-    Model, Run, Experiment, ScriptRunConfig
+    Model, Run, Experiment, ScriptRunConfig, Webservice
 )
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
