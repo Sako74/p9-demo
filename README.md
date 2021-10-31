@@ -13,13 +13,13 @@ Fonctions et contraintes du système de recommandation :
 - Anticiper l’ajout de nouveaux articles.
 
 <div align="center">
-  <img src="./P9_01_notebooks/data/gif/D%C3%A9monstration%20MVP%20mini.gif" alt="Démonstration MVP" style="width:200px;"/>
+  <img src="./P9_01_notebooks/data/gif/mvp_demo_tiny.gif" alt="Démonstration MVP" style="width:200px;"/>
 </div>
 <p align="center">Démonstration du MVP</p>
 
 Nous avons aussi mis en place une architecture MLOps qui va nous permettre d'itérer rapidement sur le MVP.
 
-![Architecture MLOps du projet](./P9_01_notebooks/data/img/Architecture%20MLOps.png)
+![Architecture MLOps du projet](./P9_01_notebooks/data/img/archi_mlops.png)
 <p align="center">Architecture MLOps</p>
 
 # Création du l'infrastructure

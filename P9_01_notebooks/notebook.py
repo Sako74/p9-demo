@@ -36,6 +36,7 @@ import dotenv
 CSV_PATH = "data/csv/"
 PICKLE_PATH = "data/pickle/"
 PARQUET_PATH = "data/parquet/"
+PICKLE_PATH = "data/pickle/"
 MODEL_PATH = "data/model/"
 SCRIPTS_PATH = "../P9_02_scripts/"
 FUNCTION_PATH = "../P9_03_function/"
